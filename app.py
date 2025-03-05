@@ -58,7 +58,7 @@ def synthesize_speech(text, voice, filename):
     )
     # Save the audio file locally
     with open(filename, 'wb') as audio_file:
-        audio_file.write(response['audio'])
+        audio_file.write(response.content)
     # Upload to S3
     s3.upload_file(
         Filename=filename,
@@ -69,6 +69,7 @@ def synthesize_speech(text, voice, filename):
     # Generate the S3 URL
     s3_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
     return s3_url
+
 
 @app.route('/')
 def index():
