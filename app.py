@@ -8,10 +8,16 @@ import threading
 import logging
 from pydub import AudioSegment
 
-# Set FFMPEG path manually for Heroku
-AudioSegment.converter = "/app/vendor/ffmpeg/bin/ffmpeg"
-AudioSegment.ffmpeg = "/app/vendor/ffmpeg/bin/ffmpeg"
-AudioSegment.ffprobe = "/app/vendor/ffmpeg/bin/ffprobe"
+# Correct FFmpeg path for the new buildpack
+ffmpeg_path = "/app/vendor/ffmpeg/ffmpeg"
+ffprobe_path = "/app/vendor/ffmpeg/ffprobe"
+
+# Assign FFmpeg paths to Pydub
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffmpeg = ffmpeg_path
+AudioSegment.ffprobe = ffprobe_path
+
+print("✅ FFmpeg correctly set to:", ffmpeg_path)
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
