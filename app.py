@@ -6,8 +6,14 @@ import schedule
 import time
 import threading
 import logging
-from pydub import AudioSegment
 from pydub.generators import Silence
+from pydub import AudioSegment
+from pydub.utils import mediainfo
+
+# Set FFMPEG path manually
+AudioSegment.converter = "/app/vendor/ffmpeg/bin/ffmpeg"
+AudioSegment.ffmpeg = "/app/vendor/ffmpeg/bin/ffmpeg"
+AudioSegment.ffprobe = "/app/vendor/ffmpeg/bin/ffprobe"
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
