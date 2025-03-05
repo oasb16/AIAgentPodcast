@@ -1,5 +1,4 @@
-flask
-requests
-schedule
-time
-threading
+flask==3.1.0
+requests==2.32.3
+schedule==1.2.1
+openai
