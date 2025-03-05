@@ -3,23 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI News Dialogue</title>
+    <title>AI News Podcast</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>AI News Dialogue</h1>
-    <div id="dialogue">
-        <!-- Dialogue will be inserted here -->
-    </div>
-    <button id="synthesizeButton">Refresh and Synthesize</button>
-    <div>
-        <h2>Agent Alpha</h2>
-        <audio id="alphaAudio" controls></audio>
-    </div>
-    <div>
-        <h2>Agent Beta</h2>
-        <audio id="betaAudio" controls></audio>
-    </div>
+    <h1>🎙 AI News Podcast</h1>
+    <button id="synthesize-btn">Generate AI Podcast</button>
+    <p id="status">Click the button to generate AI dialogue...</p>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <audio id="audio-player" controls>
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

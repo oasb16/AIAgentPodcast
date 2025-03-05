@@ -1,20 +1,22 @@
-document.getElementById('synthesizeButton').addEventListener('click', function() {
-    fetch('/synthesize', { method: 'POST' })
+document.getElementById("synthesize-btn").addEventListener("click", function () {
+    const statusText = document.getElementById("status");
+    const audioPlayer = document.getElementById("audio-player");
+
+    statusText.textContent = "⏳ Generating AI podcast...";
+
+    fetch("/synthesize", { method: "POST" })
         .then(response => response.json())
         .then(data => {
-            // Update dialogue
-            const dialogueDiv = document.getElementById('dialogue');
-            dialogueDiv.innerHTML = '';
-            data.dialogue.forEach(line => {
-                const p = document.createElement('p');
-                p.textContent = line;
-                dialogueDiv.appendChild(p);
-            });
-
-            // Update audio sources
-            document.getElementById('alphaAudio').src = data.alpha_speech_url;
-            document.getElementById('betaAudio').src = data.beta_speech_url;
+            if (data.speech_url) {
+                statusText.textContent = "✅ Podcast ready! Click play.";
+                audioPlayer.src = data.speech_url;
+                audioPlayer.style.display = "block"; // Show the player
+            } else {
+                statusText.textContent = "❌ Failed to generate audio.";
+            }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error("Error:", error);
+            statusText.textContent = "❌ Error generating podcast.";
+        });
 });
-

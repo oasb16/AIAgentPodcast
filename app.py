@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import openai
 import boto3
 import os
@@ -140,7 +140,7 @@ def synthesize():
     if not speech_url:
         logger.error("Synthesized file upload failed.")
 
-    return render_template('index.html', dialogue=dialogue, speech_url=speech_url)
+    return jsonify({"dialogue": dialogue, "speech_url": speech_url})
 
 def run_scheduler():
     while True:
