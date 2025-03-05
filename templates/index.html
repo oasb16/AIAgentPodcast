@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Newsletter</title>
+    <title>AI Agents Dialogue</title>
 </head>
 <body>
-    <h1>🔥 AI Daily Newsletter</h1>
-    <p>{{ newsletter }}</p>
+    <h1>AI Agents Dialogue</h1>
+    <pre>{{ dialogue }}</pre>
+    <form action="{{ url_for('synthesize') }}" method="post">
+        <label for="voice_alpha">Voice for Agent Alpha:</label>
+        <input type="text" id="voice_alpha" name="voice_alpha" value="alloy">
+        <br>
+        <label for="voice_beta">Voice for Agent Beta:</label>
+        <input type="text" id="voice_beta" name="voice_beta" value="alloy">
+        <br>
+        <button type="submit">Generate Speech</button>
+    </form>
 </body>
 </html>
