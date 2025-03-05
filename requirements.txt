@@ -1,4 +1,7 @@
-Flask==2.2.5
-requests==2.28.1
-python-dotenv==1.0.0
-gunicorn
+flask
+requests
+smtplib
+email.mime
+schedule
+time
+threading
