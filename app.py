@@ -64,7 +64,7 @@ def synthesize_speech(text, voice, filename):
         Filename=filename,
         Bucket=BUCKET_NAME,
         Key=filename,
-        ExtraArgs={"ACL": "public-read", "ContentType": "audio/mpeg"}
+        ExtraArgs={"ContentType": "audio/mpeg"}
     )
     # Generate the S3 URL
     s3_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
