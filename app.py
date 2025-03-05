@@ -13,14 +13,21 @@ from pydub import AudioSegment
 FFMPEG_PATH = "/app/bin/ffmpeg"
 FFPROBE_PATH = "/app/bin/ffprobe"
 
-# Download FFmpeg if not exists
-if not os.path.exists(FFMPEG_PATH):
-    os.system("curl -L https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz | tar xJf - --strip-components=1 -C /app/bin")
+# Ensure bin directory exists
+os.makedirs("/app/bin", exist_ok=True)
 
-# Set paths
+# Download FFmpeg & FFprobe if missing
+if not os.path.exists(FFMPEG_PATH) or not os.path.exists(FFPROBE_PATH):
+    os.system("curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJf - --strip-components=1 -C /app/bin")
+
+# Set correct paths for Pydub
 AudioSegment.converter = FFMPEG_PATH
 AudioSegment.ffmpeg = FFMPEG_PATH
 AudioSegment.ffprobe = FFPROBE_PATH
+
+print(f"✅ FFmpeg installed at: {FFMPEG_PATH}")
+print(f"✅ FFprobe installed at: {FFPROBE_PATH}")
+
 
 print("✅ FFmpeg installed at:", FFMPEG_PATH)
 
