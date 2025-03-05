@@ -84,8 +84,8 @@ def synthesize():
     beta_lines = [line for line in dialogue if line.startswith("Agent Beta")]
 
     # Synthesize speech for both agents
-    alpha_speech_url = synthesize_speech(" ".join(alpha_lines), "voice_alpha", 'alpha_speech.mp3')
-    beta_speech_url = synthesize_speech(" ".join(beta_lines), "voice_beta", 'beta_speech.mp3')
+    alpha_speech_url = synthesize_speech(" ".join(alpha_lines), "nova", 'alpha_speech.mp3')
+    beta_speech_url = synthesize_speech(" ".join(beta_lines), "alloy", 'beta_speech.mp3')
 
     return render_template('index.html', dialogue=dialogue, alpha_speech_url=alpha_speech_url, beta_speech_url=beta_speech_url)
 
