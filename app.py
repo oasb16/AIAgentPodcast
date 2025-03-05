@@ -13,14 +13,14 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 def fetch_ai_news():
     """Fetches the latest AI news using OpenAI's language model."""
     prompt = "Provide the 5 most recent and impactful AI news topics with brief summaries."
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are an AI news aggregator."},
             {"role": "user", "content": prompt}
         ]
     )
-    news_text = response.choices[0].message['content'].strip()
+    news_text = response.choices[0].message.content
     news_list = []
     for line in news_text.split("\n"):
         if line.strip():
@@ -41,7 +41,7 @@ def generate_dialogue(news):
 def synthesize_speech(text, voice, filename):
     """Converts text to speech using OpenAI's TTS API and saves it as an MP3 file."""
     speech_file_path = Path(__file__).parent / filename
-    response = openai.Audio.speech.create(
+    response = openai.audio.speech.create(
         model="tts-1",
         voice=voice,
         input=text
