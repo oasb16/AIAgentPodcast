@@ -12,3 +12,4 @@ httpx==0.27.2
 psycopg2-binary==2.9.10
 websocket==0.2.1
 boto3
+pydub
