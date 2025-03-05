@@ -6,9 +6,7 @@ import schedule
 import time
 import threading
 import logging
-from pydub.generators import Silence
 from pydub import AudioSegment
-from pydub.utils import mediainfo
 
 # Set FFMPEG path manually
 AudioSegment.converter = "/app/vendor/ffmpeg/bin/ffmpeg"
@@ -68,8 +66,11 @@ def synthesize_full_dialogue(dialogue, filename):
             segment = AudioSegment.from_file(temp_filename, format="mp3")
 
             # Add silence between dialogues for natural pauses
-            silence = Silence().to_audio_segment(duration=500)  # 500ms pause
+            silence = AudioSegment.silent(duration=500)  # 500ms pause
             combined_audio += segment + silence
+
+            # Clean up temp file
+            os.remove(temp_filename)
 
         # Export final combined file
         combined_audio.export(filename, format="mp3")
@@ -92,6 +93,10 @@ def upload_to_s3(filename):
         )
         s3_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
         logger.info(f"Uploaded synthesized dialogue to S3: {s3_url}")
+
+        # Cleanup local file after upload
+        os.remove(filename)
+
         return s3_url
     except Exception as e:
         logger.error(f"Error uploading file to S3: {e}")
