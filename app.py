@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import requests
+import openai, os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -9,16 +9,37 @@ import threading
 
 app = Flask(__name__)
 
+api_key = os.getenv("OPENAI_API_KEY")
+
 def fetch_ai_news():
-    """Scrapes latest AI news and returns top 5 hot topics."""
-    # Placeholder for actual web scraping implementation
-    return [
-        {"title": "Titan-AI Breaks Records", "summary": "Titan-AI achieves groundbreaking results on industry benchmarks."},
-        {"title": "EU AI Regulation Looms", "summary": "Europe plans new policies that could reshape AI deployments."},
-        {"title": "Big Tech's AI Arms Race", "summary": "Rumors of a major open-source AI collaboration stir industry."},
-        {"title": "AI Art Sparks Controversy", "summary": "Debate rages over AI-generated art in galleries."},
-        {"title": "Quantum AI Gains Traction", "summary": "Quantum computing advances could transform AI."}
-    ]
+    """Fetches latest AI news using OpenAI API."""
+    prompt = "Give me the 5 hottest and most impactful AI news topics right now with a short summary."
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "system", "content": "You are an AI news aggregator."},
+                  {"role": "user", "content": prompt}]
+    )
+    news_text = response.choices[0].message.content
+    
+    news_list = []
+    for line in news_text.split("\n"):
+        if line.strip():
+            parts = line.split("-", 1)
+            if len(parts) == 2:
+                news_list.append({"title": parts[0].strip(), "summary": parts[1].strip()})
+    
+    from pathlib import Path
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+    response = openai.audio.speech.create(
+        model="tts-1",
+        voice="alloy",
+        input="The quick brown fox jumped over the lazy dog."
+        )
+    response.stream_to_file(speech_file_path)
+
+    return news_list[:5]
+
+    
 
 def generate_dialogue(news):
     """Generates a dialogue between two AI agents discussing AI news."""
