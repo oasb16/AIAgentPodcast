@@ -1,23 +1,29 @@
 from flask import Flask, render_template, request
 import openai
 import boto3
-import os
+import os, subprocess
 import schedule
 import time
 import threading
 import logging
 from pydub import AudioSegment
 
-# Correct FFmpeg path for the new buildpack
-ffmpeg_path = "/app/vendor/ffmpeg/ffmpeg"
-ffprobe_path = "/app/vendor/ffmpeg/ffprobe"
 
-# Assign FFmpeg paths to Pydub
-AudioSegment.converter = ffmpeg_path
-AudioSegment.ffmpeg = ffmpeg_path
-AudioSegment.ffprobe = ffprobe_path
+# Define FFmpeg path
+FFMPEG_PATH = "/app/bin/ffmpeg"
+FFPROBE_PATH = "/app/bin/ffprobe"
 
-print("✅ FFmpeg correctly set to:", ffmpeg_path)
+# Download FFmpeg if not exists
+if not os.path.exists(FFMPEG_PATH):
+    os.system("curl -L https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz | tar xJf - --strip-components=1 -C /app/bin")
+
+# Set paths
+AudioSegment.converter = FFMPEG_PATH
+AudioSegment.ffmpeg = FFMPEG_PATH
+AudioSegment.ffprobe = FFPROBE_PATH
+
+print("✅ FFmpeg installed at:", FFMPEG_PATH)
+
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
