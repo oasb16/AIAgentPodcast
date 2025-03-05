@@ -2,19 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Agents Dialogue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Dialogue</title>
 </head>
 <body>
-    <h1>AI Agents Dialogue</h1>
-    <pre>{{ dialogue }}</pre>
-    <form action="{{ url_for('synthesize') }}" method="post">
-        <label for="voice_alpha">Voice for Agent Alpha:</label>
-        <input type="text" id="voice_alpha" name="voice_alpha" value="alloy">
-        <br>
-        <label for="voice_beta">Voice for Agent Beta:</label>
-        <input type="text" id="voice_beta" name="voice_beta" value="alloy">
-        <br>
-        <button type="submit">Generate Speech</button>
-    </form>
+    <h1>AI News Dialogue</h1>
+    <div id="dialogue">
+        <!-- Dialogue will be inserted here -->
+    </div>
+    <button id="synthesizeButton">Refresh and Synthesize</button>
+    <div>
+        <h2>Agent Alpha</h2>
+        <audio id="alphaAudio" controls></audio>
+    </div>
+    <div>
+        <h2>Agent Beta</h2>
+        <audio id="betaAudio" controls></audio>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
