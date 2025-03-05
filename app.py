@@ -1,36 +1,12 @@
 from flask import Flask, render_template, request
 import openai
 import boto3
-import os, subprocess
+import os
+import logging
 import schedule
 import time
 import threading
-import logging
-from pydub import AudioSegment
-
-
-# Define FFmpeg path
-FFMPEG_PATH = "/app/bin/ffmpeg"
-FFPROBE_PATH = "/app/bin/ffprobe"
-
-# Ensure bin directory exists
-os.makedirs("/app/bin", exist_ok=True)
-
-# Download FFmpeg & FFprobe if missing
-if not os.path.exists(FFMPEG_PATH) or not os.path.exists(FFPROBE_PATH):
-    os.system("curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJf - --strip-components=1 -C /app/bin")
-
-# Set correct paths for Pydub
-AudioSegment.converter = FFMPEG_PATH
-AudioSegment.ffmpeg = FFMPEG_PATH
-AudioSegment.ffprobe = FFPROBE_PATH
-
-print(f"✅ FFmpeg installed at: {FFMPEG_PATH}")
-print(f"✅ FFprobe installed at: {FFPROBE_PATH}")
-
-
-print("✅ FFmpeg installed at:", FFMPEG_PATH)
-
+from gtts import gTTS  # Alternative for text-to-speech
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -102,48 +78,17 @@ def generate_dialogue(news):
 
 def synthesize_full_dialogue(dialogue, filename):
     """
-    Synthesizes an entire dialogue (both agents) into a single MP3 file.
-    Uses OpenAI TTS for different voices sequentially.
+    Synthesizes an entire dialogue into a single MP3 file.
+    Uses Google gTTS instead of FFmpeg.
     """
     try:
         logger.info("Synthesizing full dialogue...")
 
-        combined_audio = AudioSegment.silent(duration=0)  # Start with empty audio
+        full_text = " ".join(dialogue)
+        speech = gTTS(text=full_text, lang="en", slow=False)  # Google TTS
 
-        for line in dialogue:
-            # Assign voices based on speaker
-            if line.startswith("Agent Alpha"):
-                voice = "nova"
-            elif line.startswith("Agent Beta"):
-                voice = "alloy"
-            else:
-                continue  # Skip lines that don’t match either agent
-
-            logger.info(f"Synthesizing speech: {line} with voice {voice}")
-
-            # Generate speech for this dialogue line
-            response = openai.audio.speech.create(
-                model="tts-1",
-                voice=voice,
-                input=line
-            )
-
-            temp_filename = f"temp_{voice}.mp3"
-            with open(temp_filename, 'wb') as audio_file:
-                audio_file.write(response.content)
-
-            # Load and append generated speech to the final file
-            segment = AudioSegment.from_file(temp_filename, format="mp3")
-
-            # Add silence between dialogues for natural pauses
-            silence = AudioSegment.silent(duration=500)  # 500ms pause
-            combined_audio += segment + silence
-
-            # Clean up temp file
-            os.remove(temp_filename)
-
-        # Export final combined file
-        combined_audio.export(filename, format="mp3")
+        # Save synthesized speech
+        speech.save(filename)
         logger.info(f"Final synthesized dialogue saved as: {filename}")
 
         return filename
