@@ -9,7 +9,7 @@ import threading
 
 app = Flask(__name__)
 
-api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def fetch_ai_news():
     """Fetches latest AI news using OpenAI API."""
